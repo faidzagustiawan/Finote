@@ -1,6 +1,9 @@
 package ys.mobile.finoteapp.ui.transaction
 
 import androidx.compose.foundation.Image
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AttachMoney
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -46,7 +49,7 @@ fun TransactionRow(
         ) {
             // Icon kategori di kiri
             Image(
-                painter = painterResource(id = item.iconRes),
+                imageVector = item.icon,
                 contentDescription = "${item.title} icon",
                 modifier = Modifier.size(48.dp)
             )
@@ -92,12 +95,12 @@ fun TransactionRow(
 @Composable
 fun TransactionRowPreview() {
     val sampleIncome = TransactionUiModel(
-        id = 1,
+        id = "1",
         title = "Gaji November",
         date = "30 Nov 2025",
         amountFormatted = "+Rp 5.000.000",
         isIncome = true,
-        iconRes = R.drawable.ic_salary
+        icon = Icons.Filled.AttachMoney
     )
     TransactionRow(item = sampleIncome, onClick = {})
 }
@@ -106,12 +109,12 @@ fun TransactionRowPreview() {
 @Composable
 fun TransactionRowPreviewExpense() {
     val sampleExpense = TransactionUiModel(
-        id = 2,
+        id = "2",
         title = "Belanja Bulanan",
         date = "30 Nov 2025",
         amountFormatted = "-Rp 250.000",
         isIncome = false,
-        iconRes = R.drawable.ic_shopping
+        icon = Icons.Filled.ShoppingCart
     )
     TransactionRow(item = sampleExpense, onClick = {})
 }

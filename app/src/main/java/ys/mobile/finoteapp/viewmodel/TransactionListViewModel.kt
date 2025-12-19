@@ -12,6 +12,8 @@ import ys.mobile.finoteapp.data.repository.TransactionRepository
 import ys.mobile.finoteapp.model.Transaction
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 
 sealed class TransactionListUiState {
     data object Loading : TransactionListUiState()
@@ -142,16 +144,38 @@ class TransactionListViewModel(
         }
     }
 
+    /**
+     * Mengambil satu transaksi berdasarkan ID dari list yang sudah ada
+     */
+    fun getTransactionById(id: String): Transaction? {
+        return (uiState.value as? TransactionListUiState.Success)?.transactions?.find { it.id == id }
+    }
+
     // helper to map domain to UI model
     fun mapToUiModel(transaction: Transaction): ys.mobile.finoteapp.model.TransactionUiModel {
         return ys.mobile.finoteapp.model.TransactionUiModel(
-            id = transaction.id.hashCode(),
+            id = transaction.id,
             title = transaction.title,
             date = transaction.date, // You might want to format this date too
             amountFormatted = "Rp " + String.format(java.util.Locale.US, "%,d", transaction.amount),
             isIncome = transaction.isIncome,
-            iconRes = android.R.drawable.ic_menu_add
+            icon = getCategoryIcon(transaction.category)
         )
+    }
+
+    private fun getCategoryIcon(category: String): androidx.compose.ui.graphics.vector.ImageVector {
+        return when (category) {
+            "Makanan" -> androidx.compose.material.icons.Icons.Default.Restaurant
+            "Transport" -> androidx.compose.material.icons.Icons.Default.DirectionsCar
+            "Belanja" -> androidx.compose.material.icons.Icons.Default.ShoppingCart
+            "Tagihan" -> androidx.compose.material.icons.Icons.Default.Receipt
+            "Hiburan" -> androidx.compose.material.icons.Icons.Default.Movie
+            "Gaji" -> androidx.compose.material.icons.Icons.Default.AttachMoney
+            "Bonus" -> androidx.compose.material.icons.Icons.Default.Star
+            "Penjualan" -> androidx.compose.material.icons.Icons.Default.Store
+            "Investasi" -> androidx.compose.material.icons.Icons.Default.TrendingUp
+            else -> androidx.compose.material.icons.Icons.Default.Category
+        }
     }
 
     // helper to compute stats from an in-memory list

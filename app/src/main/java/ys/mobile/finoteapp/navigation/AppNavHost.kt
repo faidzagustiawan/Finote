@@ -62,7 +62,10 @@ fun AppNavHost(
         composable(Screen.TransactionListNav.route) {
             TransactionListScreen(
                 viewModel = transactionViewModel,
-                onBack = { /* No need back for bottom nav */ }
+                onBack = { /* No need back for bottom nav */ },
+                onNavigateToEdit = { id ->
+                    navController.navigate("transaction/edit/$id")
+                }
             )
         }
 
@@ -108,7 +111,25 @@ fun AppNavHost(
         composable(Screen.TransactionList.route) {
             TransactionListScreen(
                 viewModel = transactionViewModel,
-                onBack = { navController.popBackStack() }
+                onBack = { navController.popBackStack() },
+                onNavigateToEdit = { id ->
+                    navController.navigate("transaction/edit/$id")
+                }
+            )
+        }
+
+        // EDIT TRANSACTION
+        composable(
+            route = "transaction/edit/{transactionId}",
+            arguments = listOf(androidx.navigation.navArgument("transactionId") { type = androidx.navigation.NavType.StringType })
+        ) { backStackEntry ->
+            val transactionId = backStackEntry.arguments?.getString("transactionId")
+            AddTransactionScreen(
+                navController = navController,
+                viewModel = transactionViewModel,
+                onBack = { navController.popBackStack() },
+                onScanReceipt = { navController.navigate(Screen.CameraPlaceholder.route) },
+                transactionId = transactionId
             )
         }
     }

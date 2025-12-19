@@ -35,7 +35,8 @@ import ys.mobile.finoteapp.model.TransactionUiModel
 @Composable
 fun TransactionListScreen(
     viewModel: TransactionListViewModel = viewModel(),
-    onBack: () -> Unit = {}
+    onBack: () -> Unit = {},
+    onNavigateToEdit: (String) -> Unit = {}
 ) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
@@ -99,16 +100,8 @@ fun TransactionListScreen(
                             TransactionRow(
                                 item = uiModel,
                                 onClick = { clicked ->
-                                    val toastMessage = buildString {
-                                        append(clicked.title)
-                                        append(" - ")
-                                        append(clicked.date)
-                                    }
-                                    Toast.makeText(
-                                        context,
-                                        toastMessage,
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                                     // Navigate to Edit
+                                     onNavigateToEdit(clicked.id)
                                 }
                             )
                         }
