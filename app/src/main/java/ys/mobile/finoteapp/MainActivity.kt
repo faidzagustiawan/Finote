@@ -9,12 +9,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import ys.mobile.finoteapp.navigation.AppNavHost
 import ys.mobile.finoteapp.navigation.BottomNavBar
 import ys.mobile.finoteapp.navigation.Screen
 import ys.mobile.finoteapp.ui.theme.FinoteAppTheme
+import ys.mobile.finoteapp.viewmodel.TransactionListViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,10 +30,18 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun FinoteApp() {
+
     val navController = rememberNavController()
+
+    // 🔥 Shared ViewModel — important!
+    val transactionViewModel: TransactionListViewModel = viewModel()
+
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val showBottomBar = when (navBackStackEntry?.destination?.route) {
-        Screen.Home.route, Screen.Insight.route, Screen.GoalTracker.route, Screen.Profile.route -> true
+        Screen.Home.route,
+        Screen.TransactionListNav.route,
+        Screen.Insight.route,
+        Screen.GoalTracker.route -> true
         else -> false
     }
 
@@ -41,7 +51,10 @@ fun FinoteApp() {
         ) { innerPadding ->
             AppNavHost(
                 navController = navController,
-                modifier = Modifier.padding(innerPadding)
+                modifier = Modifier.padding(innerPadding),
+
+                // ⬇⬇ WAJIB: kirim viewmodel ke semua screen
+                transactionViewModel = transactionViewModel
             )
         }
     }

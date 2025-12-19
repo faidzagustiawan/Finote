@@ -21,7 +21,7 @@ fun CameraPlaceholderScreen(onBack: () -> Unit) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Camera Screen (Week 1)", style = MaterialTheme.typography.headlineSmall)
+        Text(text = "Camera Screen", style = MaterialTheme.typography.headlineSmall)
         Button(onClick = onBack, modifier = Modifier.padding(top = 24.dp)) {
             Text(text = "Kembali")
         }

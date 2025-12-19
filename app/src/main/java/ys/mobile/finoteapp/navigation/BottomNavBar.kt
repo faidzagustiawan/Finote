@@ -2,8 +2,8 @@ package ys.mobile.finoteapp.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Flag
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -23,13 +23,7 @@ fun BottomNavBar(navController: NavHostController) {
 
     NavigationBar {
         bottomNavItems.forEach { screen ->
-            val icon = when (screen.route) {
-                Screen.Home.route -> Icons.Filled.Home
-                Screen.Insight.route -> Icons.Filled.Lightbulb
-                Screen.GoalTracker.route -> Icons.Filled.Flag
-                Screen.Profile.route -> Icons.Filled.Person
-                else -> Icons.Filled.Home
-            }
+            val icon = screen.icon
             NavigationBarItem(
                 selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                 onClick = {
