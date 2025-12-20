@@ -71,8 +71,8 @@ data class FinoteGoal(
 
 @Serializable
 data class TransactionParams(
-    val p_user: String,
-    val p_goal: String,
+    val p_user_id: String,
+    val p_goal_id: String,
     val p_amount: Double
 )
 

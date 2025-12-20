@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 object SupabaseClient {
 
     private const val SUPABASE_URL = "https://mzpexaqfdwyiflykqjne.supabase.co"
-    private const val SUPABASE_ANON_KEY = "sb_publishable_YsYP7qsufbCiu6PHNW-FNg_qW7RNpQ9"
+    private const val SUPABASE_ANON_KEY = "sb_secret_xNj40Fx4UhLaJcYN_0zuKw_vFVUVQks"
 
     private val gson = GsonBuilder()
         .setLenient()

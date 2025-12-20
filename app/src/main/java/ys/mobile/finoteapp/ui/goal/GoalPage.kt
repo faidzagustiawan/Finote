@@ -100,7 +100,7 @@ fun GoalPage(onGoalClick: (String) -> Unit, navController: NavController) {
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFF5F5F5))
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors()
             )
         },
         floatingActionButton = {
@@ -112,8 +112,7 @@ fun GoalPage(onGoalClick: (String) -> Unit, navController: NavController) {
             ) {
                 Icon(Icons.Default.Add, "Add", modifier = Modifier.size(32.dp))
             }
-        },
-        containerColor = Color(0xFFF5F5F5)
+        }
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier

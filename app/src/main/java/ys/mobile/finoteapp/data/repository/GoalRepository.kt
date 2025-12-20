@@ -103,12 +103,13 @@ object GoalRepository {
     fun addGoal(goal: FinoteGoal, imageUri: Uri? = null, context: Context? = null) {
         scope.launch {
             try {
-                val user = client.auth.currentUserOrNull() ?: return@launch
+                // FALLBACK: Use Demo ID if not logged in
+                val userId = client.auth.currentUserOrNull()?.id ?: ys.mobile.finoteapp.DEMO_USER_ID
                 var finalImageUrl = goal.imageUri
 
                 // 1. Upload Image jika ada
                 if (imageUri != null && context != null) {
-                    val fileName = "${user.id}/${UUID.randomUUID()}.jpg"
+                    val fileName = "$userId/${UUID.randomUUID()}.jpg"
                     val byteArray = context.contentResolver.openInputStream(imageUri)?.use { it.readBytes() }
 
                     if (byteArray != null) {
@@ -122,7 +123,7 @@ object GoalRepository {
                 val newId = if (goal.id.isEmpty()) UUID.randomUUID().toString() else goal.id
                 val goalToInsert = goal.copy(
                     id = newId,
-                    userId = user.id,
+                    userId = userId, // Use fallback ID
                     imageUri = finalImageUrl
                 )
 
@@ -156,9 +157,29 @@ object GoalRepository {
     fun deposit(goalId: String, amount: Double) {
         scope.launch {
             try {
-                val user = client.auth.currentUserOrNull() ?: return@launch
-                val params = TransactionParams(user.id, goalId, amount)
-                client.postgrest.rpc("deposit_to_goal", params)
+                // 1. Insert Transaction directly
+                val transaction = GoalTransaction(
+                    id = UUID.randomUUID().toString(), // FIX: Generate ID explicit
+                    goalId = goalId,
+                    type = "deposit",
+                    amount = amount,
+                    note = "Deposit via App"
+                )
+                client.from("goals_transactions").insert(transaction)
+
+                // 2. Fetch current goal to get latest amount
+                val currentGoal = client.from("goals").select {
+                    filter { eq("id", goalId) }
+                }.decodeSingleOrNull<FinoteGoal>()
+
+                if (currentGoal != null) {
+                    // 3. Update Goal's current amount
+                    val newAmount = currentGoal.currentAmount + amount
+                    client.from("goals").update(mapOf("current_amount" to newAmount)) {
+                        filter { eq("id", goalId) }
+                    }
+                }
+
                 fetchGoals()
                 fetchTransactions(goalId)
             } catch (e: Exception) {
@@ -170,9 +191,29 @@ object GoalRepository {
     fun withdraw(goalId: String, amount: Double) {
         scope.launch {
             try {
-                val user = client.auth.currentUserOrNull() ?: return@launch
-                val params = TransactionParams(user.id, goalId, amount)
-                client.postgrest.rpc("withdraw_from_goal", params)
+                // 1. Insert Transaction directly
+                val transaction = GoalTransaction(
+                    id = UUID.randomUUID().toString(), // FIX: Generate ID explicit
+                    goalId = goalId,
+                    type = "withdraw",
+                    amount = amount,
+                    note = "Withdraw via App"
+                )
+                client.from("goals_transactions").insert(transaction)
+
+                // 2. Fetch current goal to get latest amount
+                val currentGoal = client.from("goals").select {
+                    filter { eq("id", goalId) }
+                }.decodeSingleOrNull<FinoteGoal>()
+
+                if (currentGoal != null) {
+                    // 3. Update Goal's current amount
+                    val newAmount = currentGoal.currentAmount - amount
+                    client.from("goals").update(mapOf("current_amount" to newAmount)) {
+                        filter { eq("id", goalId) }
+                    }
+                }
+
                 fetchGoals()
                 fetchTransactions(goalId)
             } catch (e: Exception) {

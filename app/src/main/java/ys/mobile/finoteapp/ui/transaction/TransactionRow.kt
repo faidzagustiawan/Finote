@@ -25,6 +25,8 @@ import androidx.compose.ui.unit.dp
 import ys.mobile.finoteapp.R
 import ys.mobile.finoteapp.model.TransactionUiModel
 
+import androidx.compose.foundation.shape.RoundedCornerShape
+
 @Composable
 fun TransactionRow(
     item: TransactionUiModel,
@@ -35,8 +37,9 @@ fun TransactionRow(
         modifier = modifier
             .fillMaxWidth()
             .clickable { onClick(item) },
+        shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = Color.White
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {

@@ -26,6 +26,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ys.mobile.finoteapp.viewmodel.TransactionListViewModel
 import ys.mobile.finoteapp.viewmodel.TransactionListUiState
@@ -54,8 +55,10 @@ fun TransactionListScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "Riwayat Transaksi",
-                        style = MaterialTheme.typography.headlineSmall
+                        text = "RIWAYAT TRANSAKSI",
+                        fontSize = 24.sp,
+                        fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                        letterSpacing = 2.sp
                     )
                 },
                 navigationIcon = {

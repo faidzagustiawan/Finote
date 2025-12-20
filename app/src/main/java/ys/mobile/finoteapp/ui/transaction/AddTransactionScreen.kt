@@ -15,8 +15,16 @@ import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.DirectionsCar
+import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.QrCodeScanner
+import androidx.compose.material.icons.filled.Receipt
+import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Store
+import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -195,13 +203,19 @@ fun AddTransactionScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 currentCategories.forEach { cat ->
+                    val iconVector = getCategoryIcon(cat)
                     FilterChip(
                         selected = category == cat,
                         onClick = { category = cat },
                         label = { Text(cat) },
-                        leadingIcon = if (category == cat) {
-                            { Icon(Icons.Default.Category, contentDescription = null, modifier = Modifier.size(18.dp)) }
-                        } else null
+                        leadingIcon = {
+                            Icon(
+                                imageVector = iconVector,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp),
+                                tint = if (category == cat) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onSurface
+                            )
+                        }
                     )
                 }
             }
@@ -377,5 +391,20 @@ private fun formatDateDisplay(dateString: String): String {
         SimpleDateFormat("d MMMM yyyy", Locale.getDefault()).format(date!!) // e.g., 19 Desember 2025
     } catch (e: Exception) {
         dateString
+    }
+}
+
+private fun getCategoryIcon(category: String): androidx.compose.ui.graphics.vector.ImageVector {
+    return when (category) {
+        "Makanan" -> Icons.Default.Restaurant
+        "Transport" -> Icons.Default.DirectionsCar
+        "Belanja" -> Icons.Default.ShoppingCart
+        "Tagihan" -> Icons.Default.Receipt
+        "Hiburan" -> Icons.Default.Movie
+        "Gaji" -> Icons.Default.AttachMoney
+        "Bonus" -> Icons.Default.Star
+        "Penjualan" -> Icons.Default.Store
+        "Investasi" -> Icons.Default.TrendingUp
+        else -> Icons.Default.Category
     }
 }

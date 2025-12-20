@@ -16,12 +16,16 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.NavHostController
 
+import androidx.compose.ui.graphics.Color
+
 @Composable
 fun BottomNavBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    NavigationBar {
+    NavigationBar(
+        containerColor = Color.White
+    ) {
         bottomNavItems.forEach { screen ->
             val icon = screen.icon
             NavigationBarItem(

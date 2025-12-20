@@ -51,7 +51,10 @@ fun FinoteAppTheme(
     }
 
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = colorScheme.copy(
+            background = FinoteBackground,
+            surface = FinoteBackground
+        ),
         typography = Typography,
         content = content
     )
