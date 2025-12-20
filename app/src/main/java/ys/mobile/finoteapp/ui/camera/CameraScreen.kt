@@ -399,12 +399,34 @@ private fun launchMain(block: () -> Unit) {
 
 // Regex to find numbers. Simple implementation.
 private fun extractNumbers(text: String): List<Long> {
+    // Regex matches numbers with various separators: 100, 100.000, 100,000, 8.000,00
     val regex = Regex("[0-9]{1,3}(?:[.,][0-9]{3})*(?:[.,][0-9]+)?")
+    
     return regex.findAll(text)
         .mapNotNull { result ->
-            val clean = result.value.replace(".", "").replace(",", "")
-            // Handle edge cases where comma might be decimal
-            // For now assume IDR which usually doesn't have decimals or we ignore them if just 00
+            var raw = result.value
+            
+            // Fix for Indonesian format (e.g. "8.000,00" -> 8000)
+            // If comma is used as decimal separator (patterns like ",00", ",50", ",5")
+            if (raw.contains(",")) {
+                val parts = raw.split(",")
+                val lastPart = parts.last()
+                
+                // If the part after the last comma is 1 or 2 digits, it's likely a decimal.
+                // Examples: "8.000,00" -> strip ",00"
+                // "12,5" -> strip ",5"
+                // But "100,000" (US format) -> "000" (3 digits) -> Keep it.
+                if (lastPart.length in 1..2) {
+                    raw = raw.substringBeforeLast(",")
+                }
+            }
+            
+            // Remove all dots and remaining commas to get pure digits
+            val clean = raw.replace(".", "").replace(",", "")
+            
+            // Filter noise: empty strings or too long sequences (though regex limits this somewhat)
+            if (clean.isEmpty() || clean.length > 15) return@mapNotNull null
+            
             clean.toLongOrNull()
         }
         .filter { it > 100 } // Filter out small noise
