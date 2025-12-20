@@ -16,9 +16,10 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven("https://jitpack.io")
     }
 }
 
-rootProject.name = "FinoteWithSupabase"
+rootProject.name = "Finote App"
 include(":app")
  
